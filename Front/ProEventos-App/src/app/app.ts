@@ -3,6 +3,9 @@ import { RouterOutlet } from '@angular/router';
 
 import { Eventos } from './eventos/eventos';
 import { PalestrantesComponent } from './palestrantes/palestrantes.component';
+import { NavComponent } from './nav/nav.component';
+
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +13,9 @@ import { PalestrantesComponent } from './palestrantes/palestrantes.component';
   imports: [
     RouterOutlet,
     Eventos,
-    PalestrantesComponent
+    PalestrantesComponent,
+    NavComponent,
+    CollapseModule
   ],
   templateUrl: './app.html',
 })

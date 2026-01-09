@@ -1,4 +1,10 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectorRef,
+  afterNextRender
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -9,31 +15,30 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './eventos.html',
   styleUrls: ['./eventos.scss'],
 })
-export class Eventos implements OnInit {
+export class Eventos {
 
   public eventos: any[] = [];
 
   constructor(
     private http: HttpClient,
+    private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
-
-  ngOnInit(): void {
-    // ✅ só executa no browser (evita erro com SSR)
-    if (isPlatformBrowser(this.platformId)) {
-      this.getEventos();
-    }
+  ) {
+    afterNextRender(() => {
+      if (isPlatformBrowser(this.platformId)) {
+        this.getEventos();
+      }
+    });
   }
 
-public getEventos(): void {
-  this.http.get<any[]>('http://localhost:5279/api/eventos')
-    .subscribe({
-      next: response => {
-        console.log('EVENTOS RECEBIDOS:', response);
-        this.eventos = response;
-      },
-      error: err => console.error('ERRO:', err)
-    });
-}
-
+  getEventos(): void {
+    this.http.get<any[]>('http://localhost:5279/api/eventos')
+      .subscribe({
+        next: response => {
+          this.eventos = response;
+          this.cdr.detectChanges(); // 🔥 força atualização da view
+        },
+        error: err => console.error(err)
+      });
+  }
 }

@@ -127,3 +127,4 @@ C:\Users\Luiz\Documents\Proeventos\Back\src\ProEventos.API\obj\Debug\net8.0\refi
 C:\Users\Luiz\Documents\Proeventos\Back\src\ProEventos.API\obj\Debug\net8.0\ProEventos.API.pdb
 C:\Users\Luiz\Documents\Proeventos\Back\src\ProEventos.API\obj\Debug\net8.0\ProEventos.API.genruntimeconfig.cache
 C:\Users\Luiz\Documents\Proeventos\Back\src\ProEventos.API\obj\Debug\net8.0\ref\ProEventos.API.dll
+C:\Users\Luiz\Documents\Proeventos\Back\src\ProEventos.API\obj\Debug\net8.0\ProEventos.API.sourcelink.json
