@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
 
 import { Eventos } from './eventos/eventos';
 import { PalestrantesComponent } from './palestrantes/palestrantes.component';
@@ -15,7 +17,8 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
     Eventos,
     PalestrantesComponent,
     NavComponent,
-    CollapseModule
+    CollapseModule,
+    FormsModule
   ],
   templateUrl: './app.html',
 })

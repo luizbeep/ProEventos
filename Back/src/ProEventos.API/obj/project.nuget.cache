@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ezJz5OygOKw=",
+  "dgSpecHash": "G74R0jFpdEA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.API\\ProEventos.API.csproj",
+  "projectFilePath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\proeventos.api\\ProEventos.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Luiz\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
