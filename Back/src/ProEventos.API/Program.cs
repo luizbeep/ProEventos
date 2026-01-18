@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using ProEventos.API.Data;
+using ProEventos.Application;
+using ProEventos.Application.Contratos;
+using ProEventos.Persistence;
+using ProEventos.Persistence.Contextos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,13 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Services
 // =====================
 
-// Registrar o DbContext com SQLite
-builder.Services.AddDbContext<DataContext>(options =>
+// Registrar o DbContext CORRETO (Persistence)
+builder.Services.AddDbContext<ProEventosContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default"));
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("Default")
+    );
 });
 
-// 🔹 CORS (ADICIONADO)
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
@@ -26,7 +31,16 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+        .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
+            Newtonsoft.Json.ReferenceLoopHandling.Ignore
+        );
+
+builder.Services.AddScoped<IEventoService, EventoService>();
+builder.Services.AddScoped<IGeralPersist, GeralPersist>();
+builder.Services.AddScoped<IEventoPersist, EventoPersist>();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -41,7 +55,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 🔹 CORS (ADICIONADO — posição correta)
 app.UseCors("AllowAngular");
 
 app.UseAuthorization();
