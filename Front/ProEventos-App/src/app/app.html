@@ -1,9 +1,13 @@
 <app-nav></app-nav>
 
-<div class = "container">
-
-<app-eventos></app-eventos>
-
-
-<router-outlet></router-outlet>
+<div class="container">
+  <router-outlet></router-outlet>
 </div>
+
+<ngx-spinner
+  bdColor="rgba(0,0,0,0.6)"
+  size="medium"
+  color="#ffffff"
+  type="square-jelly-box"
+  [fullScreen]="true">
+</ngx-spinner>

@@ -1,25 +1,17 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 
-
-import { Eventos } from './eventos/eventos';
-import { PalestrantesComponent } from './palestrantes/palestrantes.component';
-import { NavComponent } from './nav/nav.component';
-
-import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { NavComponent } from './shared/titulo/nav/nav.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
-    Eventos,
-    PalestrantesComponent,
     NavComponent,
-    CollapseModule,
-    FormsModule
+    RouterOutlet,
+    NgxSpinnerModule
   ],
-  templateUrl: './app.html',
+  templateUrl: './app.html'
 })
 export class AppComponent {}

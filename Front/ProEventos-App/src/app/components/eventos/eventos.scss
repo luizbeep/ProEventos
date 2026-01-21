@@ -1,0 +1,14 @@
+html, body {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body {
+  display: block !important;
+  position: static !important;
+  transform: none !important;
+}
+
+table, tbody, tr, td {
+  overflow: visible !important;
+}

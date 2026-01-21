@@ -1,6 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
-@import '../node_modules/bootstrap/dist/css/bootstrap-grid.min.css';
-@import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
-@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap/dist/css/bootstrap-grid.min.css";
+@import "ngx-bootstrap/datepicker/bs-datepicker.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "ngx-toastr/toastr";
+
+
+html, body {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body {
+  display: block !important;
+  position: static !important;
+  transform: none !important;
+}
+
+table, tbody, tr, td {
+  overflow: visible !important;
+}
+
+
+
+html, body {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body {
+  display: block !important;
+  position: static !important;
+  transform: none !important;
+}
+
+table, tbody, tr, td {
+  overflow: visible !important;
+}
+
+.collapse-container {
+  max-height: 0;           /* escondido */
+  overflow: hidden;
+  transition: max-height 0.3s ease; /* animação suave */
+}
+
+.collapse-container.show {
+  max-height: 500px;       /* valor maior que a altura da imagem */
+}
 
