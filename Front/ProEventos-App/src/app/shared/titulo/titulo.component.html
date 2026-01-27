@@ -1,0 +1,18 @@
+<div
+  class="d-flex align-items-center p-3 my-3 text-dark-50 bg-primary rounded shadow-sm">
+
+  <i class="{{ iconClass }} titulo-icon me-3"></i>
+
+  <div class="lh-100">
+    <h2 class="h2 mb-0">{{ texto }}</h2>
+    <small>{{ subtitulo }}</small>
+  </div>
+
+  @if (botaoListar) {
+    <div class="ms-auto">
+      <button class="btn btn-outline-light" (click)="listar()">
+        Listar {{ texto }}
+      </button>
+    </div>
+  }
+</div>

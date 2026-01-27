@@ -1,5 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="/eventos">ProEventos</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-primary shadow-sm" *ngIf="showMenu()">
+  <div class="container">
+  <a class="navbar-brand" routerLink="/eventos"><i class="fa fa-music logo-icon"></i></a>
 
   <button
     class="navbar-toggler"
@@ -40,17 +41,18 @@
         </a>
 
         <div *dropdownMenu class="dropdown-menu">
-          <a class="dropdown-item" routerLink="/perfil">
+          <a class="dropdown-item" routerLink="user/perfil">
             Perfil
           </a>
 
           <div role="separator" class="divider"></div>
-          <a class="dropdown-item">
+          <a class="dropdown-item" routerLink="user/login">
             Sair
           </a>
         </div>
       </li>
     </ul>
 
+    </div>
   </div>
 </nav>

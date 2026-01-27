@@ -17,6 +17,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TituloComponent } from '../../shared/titulo/titulo.component';
+import { RouterOutlet } from "@angular/router";
 
 
 
@@ -32,14 +33,14 @@ import { TituloComponent } from '../../shared/titulo/titulo.component';
     DateTimeFormatPipe,
     TituloComponent,
     CommonModule,
-    TooltipModule
+    TooltipModule,
+    RouterOutlet
 ],
   providers: [EventoService],
   templateUrl: './eventos.html',
   styleUrls: ['./eventos.scss'],
 })
 export class Eventos {
-
   modalRef?: BsModalRef;
 
   isCollapsed = true;
@@ -53,11 +54,19 @@ export class Eventos {
   public tituloPagina = 'Eventos';
 
 
-
   public get filtroLista(){
     return this._filtroLista
   }
 
+  public listarEventos = false;
+
+  public toggleEventos() {
+    this.listarEventos = !this.listarEventos; // alterna entre true/false
+
+    if (this.listarEventos) {
+      this.getEventos(); // só carrega os eventos quando for mostrar
+    }
+  }
   public set filtroLista(value: string){
     this._filtroLista = value;
     this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;

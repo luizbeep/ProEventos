@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
-                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
+              "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
+                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
               },
               "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Persistence\\ProEventos.Persistence.csproj": {
                 "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Persistence\\ProEventos.Persistence.csproj"
@@ -115,14 +115,14 @@
         }
       }
     },
-    "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
+    "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
         "projectName": "ProEventos.Application",
-        "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
+        "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
         "packagesPath": "C:\\Users\\Luiz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\obj\\",
+        "outputPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Luiz\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -287,8 +287,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
-                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
+              "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
+                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
               },
               "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj": {
                 "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj"

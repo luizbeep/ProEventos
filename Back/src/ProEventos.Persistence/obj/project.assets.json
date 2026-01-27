@@ -2624,8 +2624,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
-              "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
+            "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
+              "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
             },
             "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj": {
               "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj"

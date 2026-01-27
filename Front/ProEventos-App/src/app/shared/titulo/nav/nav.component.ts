@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Route, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CommonModule } from '@angular/common';
@@ -14,12 +14,16 @@ import { CommonModule } from '@angular/common';
     CollapseModule,
     BsDropdownModule
   ],
-  templateUrl: './nav.component.html'
+  templateUrl: './nav.component.html',
+  styleUrls: ['./nav.component.scss']
+
 })
 export class NavComponent {
   isCollapsed = true;
 
-  logout() {
-    console.log('logout');
+  constructor(private router: Router) { }
+
+  showMenu(): boolean {
+    return this.router.url !== '/user/login';
   }
 }
