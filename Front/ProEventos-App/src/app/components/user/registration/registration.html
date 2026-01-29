@@ -3,15 +3,25 @@
 
     <h3 class="text-center mb-4">Cadastro de Usuário</h3>
 
-    <form class="register-form">
+  <form class="register-form" [formGroup]="form">
 
       <div class="form-group">
         <label>Primeiro Nome</label>
         <input
           type="text"
           class="form-control"
+          formControlName="primeiroNome"
           placeholder="Digite seu primeiro nome"
+          [ngClass]="{ 'is-invalid': f.primeiroNome?.invalid && f.primeiroNome?.touched }"
         />
+        <div *ngIf="f.primeiroNome?.hasError('required') && f.primeiroNome?.touched" class="invalid-feedback">
+          O nome é obrigatório!
+        </div>
+
+        <div *ngIf="f.primeiroNome?.hasError('maxlength') && f.primeiroNome?.touched" class="invalid-feedback">
+          Digite apenas o primeiro nome.
+        </div>
+
       </div>
 
       <div class="form-group">
@@ -19,8 +29,17 @@
         <input
           type="text"
           class="form-control"
-          placeholder="Digite seu último nome"
+          formControlName="ultimoNome"
+          placeholder="Digite o seu sobrenome"
+          [ngClass]="{ 'is-invalid': f.ultimoNome?.invalid && f.ultimoNome?.touched }"
         />
+        <div *ngIf="f.ultimoNome?.hasError('required') && f.ultimoNome?.touched" class="invalid-feedback">
+          O sobrenome é obrigatório!
+        </div>
+
+        <div *ngIf="f.ultimoNome?.hasError('maxlength') && f.ultimoNome?.touched" class="invalid-feedback">
+          Digite apenas o sobrenome.
+        </div>
       </div>
 
       <div class="form-group">
@@ -29,7 +48,15 @@
           type="email"
           class="form-control"
           placeholder="Digite seu email"
+          formControlName="email"
+          [ngClass]="{ 'is-invalid': f.email?.invalid && f.email?.touched }"
         />
+        <div *ngIf="f.email?.hasError('required') && f.email?.touched" class="invalid-feedback">
+          Email é obrigatório!
+        </div>
+        <div *ngIf="f.email?.hasError('email') && f.email?.touched" class="invalid-feedback">
+          Email inválido!
+        </div>
       </div>
 
       <div class="form-group">
@@ -37,8 +64,21 @@
         <input
           type="text"
           class="form-control"
-          placeholder="Digite seu usuário"
+          placeholder="Digite o seu nome de usuário"
+          formControlName="userName"
+          [ngClass]="{ 'is-invalid': f.userName?.invalid && f.userName?.touched }"
         />
+
+        <div *ngIf="f.userName?.hasError('required') && f.userName?.touched" class="invalid-feedback">
+          Nome de usuário é obrigatório
+        </div>
+        <div *ngIf="f.userName?.hasError('maxlength') && f.userName?.touched" class="invalid-feedback">
+          O nome de usuário precisa ter menos de 16 caracteres
+        </div>
+        <div *ngIf="f.userName?.hasError('minlength') && f.userName?.touched" class="invalid-feedback">
+          O nome de usuário precisa ter ao menos 4 caracteres
+        </div>
+
       </div>
 
       <div class="form-group">
@@ -46,8 +86,18 @@
         <input
           type="password"
           class="form-control"
-          placeholder="Digite sua senha"
+          placeholder="Digite o seu nome de usuário"
+          formControlName="senha"
+          [ngClass]="{ 'is-invalid': f.senha?.invalid && f.senha?.touched }"
         />
+
+        <div *ngIf="f.senha?.hasError('required') && f.senha?.touched" class="invalid-feedback">
+          A senha é obrigatória
+        </div>
+        <div *ngIf="f.senha?.hasError('minlength') && f.senha?.touched" class="invalid-feedback">
+          A senha precisa de pelo menos de 6 caracteres
+        </div>
+
       </div>
 
       <div class="form-group">
@@ -56,7 +106,21 @@
           type="password"
           class="form-control"
           placeholder="Confirme sua senha"
+          formControlName="confirmeSenha"
+          [ngClass]="{ 'is-invalid': f.confirmeSenha?.invalid && f.confirmeSenha?.touched }"
         />
+
+         <div *ngIf="f.confirmeSenha?.hasError('required') && f.confirmeSenha?.touched" class="invalid-feedback">
+          Confirme a sua senha
+        </div>
+
+        <div
+          *ngIf="f.confirmeSenha?.hasError('mustMatch') && f.confirmeSenha?.touched"
+          class="invalid-feedback"
+        >
+          As senhas são diferentes
+        </div>
+
       </div>
 
       <div class="form-check text-center mt-3">
