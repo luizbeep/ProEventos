@@ -3,7 +3,7 @@ using ProEventos.Application;
 using ProEventos.Application.Contratos;
 using ProEventos.Persistence;
 using ProEventos.Persistence.Contextos;
-
+using AutoMapper;
 var builder = WebApplication.CreateBuilder(args);
 
 // =====================
@@ -40,6 +40,7 @@ builder.Services.AddScoped<IEventoService, EventoService>();
 builder.Services.AddScoped<IGeralPersist, GeralPersist>();
 builder.Services.AddScoped<IEventoPersist, EventoPersist>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

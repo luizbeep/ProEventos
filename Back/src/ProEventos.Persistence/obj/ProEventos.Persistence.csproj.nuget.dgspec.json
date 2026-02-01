@@ -4,14 +4,14 @@
     "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Persistence\\ProEventos.Persistence.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
+    "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
         "projectName": "ProEventos.Application",
-        "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
+        "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
         "packagesPath": "C:\\Users\\Luiz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\obj\\",
+        "outputPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Luiz\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -47,6 +47,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -176,8 +182,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
-                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
+              "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
+                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
               },
               "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj": {
                 "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj"

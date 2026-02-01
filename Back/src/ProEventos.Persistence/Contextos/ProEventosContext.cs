@@ -7,8 +7,6 @@ namespace ProEventos.Persistence.Contextos
     public class ProEventosContext : DbContext
     {
         public ProEventosContext(DbContextOptions<ProEventosContext> options) : base(options) { }
-
-        // Suas entidades
         public DbSet<Evento> Eventos { get; set; } = null!;
         public DbSet<Lote> Lotes { get; set; } = null!;
         public DbSet<Artista> Artistas { get; set; } = null!;

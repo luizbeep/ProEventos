@@ -10,4 +10,8 @@
     <ProjectReference Include="..\ProEventos.Domain\ProEventos.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+  </ItemGroup>
+
 </Project>

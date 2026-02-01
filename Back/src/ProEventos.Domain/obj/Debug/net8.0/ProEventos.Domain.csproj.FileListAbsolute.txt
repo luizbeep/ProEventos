@@ -1,4 +1,4 @@
-C:\Users\Luiz\Documents\Proeventos\Back\src\ProEventos.Domain\bin\Debug\net8.0\ProEventos.Domain.deps.json
+C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\bin\Debug\net8.0\ProEventos.Domain.deps.json
 C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\bin\Debug\net8.0\ProEventos.Domain.dll
 C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\bin\Debug\net8.0\ProEventos.Domain.pdb
 C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\obj\Debug\net8.0\ProEventos.Domain.GeneratedMSBuildEditorConfig.editorconfig
@@ -9,4 +9,4 @@ C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\obj\Debug\net8.0\P
 C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\obj\Debug\net8.0\ProEventos.Domain.dll
 C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\obj\Debug\net8.0\refint\ProEventos.Domain.dll
 C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\obj\Debug\net8.0\ProEventos.Domain.pdb
-C:\Users\Luiz\Documents\Proeventos\Back\src\ProEventos.Domain\obj\Debug\net8.0\ref\ProEventos.Domain.dll
+C:\Users\Luiz\Documents\Proeventos\back\src\ProEventos.Domain\obj\Debug\net8.0\ref\ProEventos.Domain.dll

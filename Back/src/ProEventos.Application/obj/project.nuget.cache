@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "zaTU8mmNmd8=",
+  "dgSpecHash": "ufMSgSKm9SQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
+  "projectFilePath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Luiz\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.18\\microsoft.netcore.app.ref.8.0.18.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.18\\microsoft.windowsdesktop.app.ref.8.0.18.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.18\\microsoft.aspnetcore.app.ref.8.0.18.nupkg.sha512"

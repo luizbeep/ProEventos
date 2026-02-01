@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProEventos.Domain
+namespace ProEventos.Application.Dtos
 {
-    public class RedeSocial
+    public class RedeSocialDto
     {
         public int Id { get; set; }
         public string Nome { get; set; }
         public string URL { get; set; }
         public int? EventoId { get; set; }
-        public Evento? Evento { get; set; }
+        public EventoDto Evento { get; set; }
 
         public int? ArtistaId { get; set; }
-         public Artista? Artista { get; set; 
+         public ArtistaDto Artista { get; set; 
+        
     }
   }
 }
