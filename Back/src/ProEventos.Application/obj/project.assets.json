@@ -142,11 +142,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
+      "projectUniqueName": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
       "projectName": "ProEventos.Application",
-      "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
+      "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj",
       "packagesPath": "C:\\Users\\Luiz\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\Back\\src\\ProEventos.Application\\obj\\",
+      "outputPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Luiz\\AppData\\Roaming\\NuGet\\NuGet.Config"

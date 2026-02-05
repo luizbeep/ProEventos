@@ -43,4 +43,24 @@ export class EventoService {
       .get<Evento>(`${this.baseURL}/${id}`)
       .pipe(map(evento => this.mapEvento(evento)));
   }
+
+  public postEvento(evento: Evento): Observable<Evento> {
+    return this.http
+      .post<Evento>(this.baseURL, evento)
+      .pipe(map(evento => this.mapEvento(evento)));
+  }
+
+ public putEvento(id: number, evento: Evento): Observable<Evento> {
+    return this.http
+      .put<Evento>(`${this.baseURL}/${id}`, evento)
+      .pipe(map(evento => this.mapEvento(evento)));
+  }
+
+   public deleteEvento(id: number) {
+      return this.http.delete(
+        `http://localhost:5279/api/eventos/${id}`,
+        { responseType: 'text' }
+      );
+    }
+
 }

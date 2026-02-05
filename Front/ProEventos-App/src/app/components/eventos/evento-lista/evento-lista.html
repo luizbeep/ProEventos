@@ -78,7 +78,7 @@
           <button
             type="button"
             class="btn btn-danger btn-sm"
-            (click)="openModal(template); $event.stopPropagation()">
+            (click)="openModal($event, template, evento.tema, evento.id); $event.stopPropagation()">
             <i class="fa fa-trash"></i>
           </button>
         </td>
@@ -97,7 +97,7 @@
 
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Tem certeza que quer deletar esse evento?</p>
+    <p>Tem certeza que quer deletar o evento: "{{this.tema}}"?</p>
     <button class="btn btn-danger me-2" (click)="confirm()">Sim</button>
     <button class="btn btn-secondary" (click)="decline()">Não</button>
   </div>

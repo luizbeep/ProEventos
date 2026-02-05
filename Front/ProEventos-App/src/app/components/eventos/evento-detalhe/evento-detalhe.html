@@ -3,8 +3,6 @@
 
 
     <div class="row mb-3">
-    <!-- <p>Form value: {{form.value | json}}</p>  -->
-    <!-- <p>Form valid: {{form.status | json}}</p> -->
       <div class="col-12">
         <label class="form-label">Tema</label>
         <input
@@ -47,16 +45,19 @@
       <div class="col-md-4">
         <label class="form-label">Data e Hora</label>
         <input
-          type="datetime-local"
+          type="text"
           class="form-control"
           formControlName="dataEvento"
-          [ngClass]="{ 'is-invalid': f.dataEvento?.invalid && f.dataEvento?.touched }"
+          placeholder="Selecione a data"
+          #picker
         />
+
+
+        </div>
         <div *ngIf="f.dataEvento?.hasError('required') && f.dataEvento?.touched" class="invalid-feedback">
           Data é obrigatória!
         </div>
       </div>
-    </div>
 
     <div class="row mb-4">
       <div class="col-md-8">
@@ -135,7 +136,7 @@
         Cancelar Alteração
       </button>
 
-      <button type="submit" class="btn btn-success" [disabled]="!form.valid">
+      <button type="submit" class="btn btn-success" [disabled]="!form.valid" (click)="salvarAlteracao()">
         <!-- <span class="spinner-border spinner-border-sm me-1"></span> -->
         Salvar Evento
       </button>

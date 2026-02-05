@@ -33,6 +33,7 @@
     "@fortawesome/fontawesome-free": "^7.1.0",
     "bootstrap": "^5.3.8",
     "bootswatch": "^5.3.8",
+    "flatpickr": "^4.6.13",
     "ngx-bootstrap": "^20.0.2",
     "ngx-spinner": "^21.0.0",
     "ngx-toastr": "^20.0.3",
