@@ -6,11 +6,6 @@ using ProEventos.Persistence.Contextos;
 using AutoMapper;
 var builder = WebApplication.CreateBuilder(args);
 
-// =====================
-// Services
-// =====================
-
-// Registrar o DbContext CORRETO (Persistence)
 builder.Services.AddDbContext<ProEventosContext>(options =>
 {
     options.UseSqlite(
@@ -18,7 +13,6 @@ builder.Services.AddDbContext<ProEventosContext>(options =>
     );
 });
 
-// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
@@ -37,8 +31,12 @@ builder.Services.AddControllers()
         );
 
 builder.Services.AddScoped<IEventoService, EventoService>();
+builder.Services.AddScoped<ILoteService, LoteService>();
+
 builder.Services.AddScoped<IGeralPersist, GeralPersist>();
 builder.Services.AddScoped<IEventoPersist, EventoPersist>();
+builder.Services.AddScoped<ILotePersist, LotePersist>();
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -47,9 +45,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// =====================
-// Pipeline
-// =====================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

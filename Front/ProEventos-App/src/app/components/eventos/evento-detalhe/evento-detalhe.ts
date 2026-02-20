@@ -3,15 +3,19 @@ import {
   Component,
   AfterViewInit,
   ElementRef,
-  ViewChild
+  ViewChild,
+  TemplateRef
 } from '@angular/core';
 import {
+  AbstractControl,
+  FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import flatpickr from 'flatpickr';
 import { Portuguese } from 'flatpickr/dist/l10n/pt';
@@ -20,6 +24,14 @@ import { Evento } from '../../../models/Evento';
 import { DateTimeFormatPipe } from '../../../helpers/DateTimeFormat.pipe';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { Lote } from '../../../models/Lote';
+import { LoteService } from '../../../services/lote.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ChangeDetectorRef } from '@angular/core';
+import { NgxCurrencyDirective } from 'ngx-currency';
+
+
 
 @Component({
   selector: 'app-evento-detalhe',
@@ -27,7 +39,9 @@ import { ToastrService } from 'ngx-toastr';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DateTimeFormatPipe
+    DateTimeFormatPipe,
+    NgxCurrencyDirective,
+    TooltipModule
   ],
   templateUrl: './evento-detalhe.html',
   styleUrls: ['./evento-detalhe.scss'],
@@ -35,61 +49,134 @@ import { ToastrService } from 'ngx-toastr';
 export class EventoDetalhe implements AfterViewInit {
   evento: Evento = {} as Evento;
   estadoSalvar = 'post';
+  public eventoId!: number;
+  modalRef?: BsModalRef;
+  loteAtual = {id: 0, nome: '', indice: 0};
 
+  private lotesFlatpickrInstances: { [key: string]: flatpickr.Instance } = {};
   @ViewChild('picker', { static: true })
   picker!: ElementRef<HTMLInputElement>;
 
   form!: FormGroup;
 
+  get lotes(): FormArray{
+    return this.form.get('lotes') as FormArray;
+  }
+
   get f(): any {
     return this.form.controls;
   }
 
- private fp!: flatpickr.Instance;
-
-  constructor(
-    private fb: FormBuilder,
-    private router: ActivatedRoute,
-    private eventoService: EventoService,
-    private spinner: NgxSpinnerService,
-    private toastr: ToastrService) {
-    this.carregarEvento();
-    this.validation();
-
+  get modoEditar(): boolean{
+    return this.estadoSalvar == 'put';
   }
 
-  public carregarEvento(): void {
-    const eventoIdParam = this.router.snapshot.paramMap.get('id');
+  private fp!: flatpickr.Instance;
 
-    if(eventoIdParam !== null){
-      this.spinner.show();
+constructor(
+  private fb: FormBuilder,
+  private activatedRoute: ActivatedRoute,
+  private router: Router,
+  private eventoService: EventoService,
+  private spinner: NgxSpinnerService,
+  private toastr: ToastrService,
+  private modalService: BsModalService,
+  private cdr: ChangeDetectorRef,
+  private loteService: LoteService)
+ {
+  this.validation();
+  this.carregarEvento();
+}
+private formatDatePtBr(date: Date): string {
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  const hh = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+  const ss = String(date.getSeconds()).padStart(2, '0');
+  return `${dd}/${mm}/${yyyy} ${hh}:${min}:${ss}`;
+}
 
-      this.estadoSalvar = 'put';
+private initLoteDatePicker(inputElement: HTMLInputElement, campo: 'dataInicio' | 'dataFim', formGroupIndex: number): void {
+  const key = `${campo}_${formGroupIndex}`;
 
-      this.eventoService.getEventoById(+eventoIdParam).subscribe({
-          next: (evento: Evento) => {
-            this.evento = {...evento};
-            this.form.patchValue({
-            ...evento,
-            dataEvento: evento.dataEvento
-              ? new Date(evento.dataEvento)
-              : null
-          });
-            this.fp?.setDate(
-              this.form.get('dataEvento')?.value,
-              false
-            );
-          },
+  if (this.lotesFlatpickrInstances[key]) {
+    this.lotesFlatpickrInstances[key].destroy();
+  }
 
-          error: (error: any) => {
-            this.spinner.hide();
-            this.toastr.error('Não foi possível carregar os eventos. ')
-            console.error(error);
-          },
-          complete: () => {this.spinner.hide()},
-        })
+  const config: flatpickr.Options.Options = {
+    locale: Portuguese,
+    enableTime: true,
+    time_24hr: true,
+    allowInput: true,
+    defaultDate: this.lotes.at(formGroupIndex)?.get(campo)?.value,
+    onChange: (selectedDates) => {
+      const date = selectedDates[0];
+      if (date) {
+        this.lotes.at(formGroupIndex)?.get(campo)?.setValue(date);
+      }
     }
+  };
+
+  if (campo === 'dataInicio') {
+    config.dateFormat = 'd/m/Y H:i:S';     // Formato do VALUE (com ano 4 dígitos)
+    config.altFormat = 'd/m/y H:i:S';      // Formato VISUAL do calendário (DD/MM/YY)
+    config.enableSeconds = true;
+    config.altInput = true;
+  } else {
+    config.dateFormat = 'Y-m-d H:i';       // Formato do VALUE (ISO com ano 4 dígitos)
+    config.altFormat = 'd/m/y H:i';        // Formato VISUAL do calendário (DD/MM/YY)
+    config.enableSeconds = false;
+    config.altInput = true;
+    config.altInputClass = 'form-control';
   }
+
+  this.lotesFlatpickrInstances[key] = flatpickr(inputElement, config);
+}
+
+private formatDateIso(date: Date): string {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const hh = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}:00`;
+}
+
+
+public carregarEvento(): void {
+  const eventoIdParam = this.activatedRoute.snapshot.paramMap.get('id');
+
+  if (eventoIdParam !== null && eventoIdParam !== '0') {
+    this.spinner.show();
+    this.estadoSalvar = 'put';
+
+    this.eventoId = +eventoIdParam;
+
+    this.eventoService.getEventoById(this.eventoId).subscribe({
+      next: (evento: Evento) => {
+        this.evento = { ...evento };
+        this.evento.lotes.forEach(lote =>{
+          this.lotes.push(this.criarLote(lote));
+        });
+
+        this.form.patchValue({
+          ...evento,
+          dataEvento: evento.dataEvento
+            ? new Date(evento.dataEvento)
+            : null
+        });
+
+        this.fp?.setDate(this.form.get('dataEvento')?.value, false);
+      },
+      error: () => {
+        this.spinner.hide();
+        this.toastr.error('Não foi possível carregar o evento.');
+      },
+      complete: () => this.spinner.hide()
+    });
+  }
+}
 
   public validation(): void {
     this.form = this.fb.group({
@@ -103,8 +190,135 @@ export class EventoDetalhe implements AfterViewInit {
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       imagemURL: ['', Validators.required],
+      lotes: this.fb.array([])
     });
   }
+
+adicionarLote(): void {
+  this.lotes.push(this.criarLote({ id: 0 } as Lote));
+  setTimeout(() => {
+    this.setupLoteDatePickers();
+  });
+}
+
+public salvarLotes(): void {
+  if (!this.lotes.valid) {
+    this.toastr.warning('Existem lotes inválidos');
+    return;
+  }
+
+  console.log('Valores originais dos lotes:', this.lotes.value); // DEBUG
+
+  const lotesParaApi = this.lotes.value.map((lote: any) => {
+    // Data Início: dd/MM/yyyy HH:mm:ss
+    let dataInicio = null;
+    if (lote.dataInicio) {
+      if (lote.dataInicio instanceof Date) {
+        dataInicio = this.formatDatePtBr(lote.dataInicio);
+      } else {
+        // Tenta converter string para Date
+        try {
+          const date = new Date(lote.dataInicio);
+          if (!isNaN(date.getTime())) {
+            dataInicio = this.formatDatePtBr(date);
+          } else {
+            dataInicio = lote.dataInicio;
+          }
+        } catch {
+          dataInicio = lote.dataInicio;
+        }
+      }
+    }
+
+    let dataFim = null;
+    if (lote.dataFim) {
+      if (lote.dataFim instanceof Date) {
+        dataFim = this.formatDateIso(lote.dataFim);
+      } else {
+        try {
+          const date = new Date(lote.dataFim);
+          if (!isNaN(date.getTime())) {
+            dataFim = this.formatDateIso(date);
+          } else {
+            dataFim = lote.dataFim;
+          }
+        } catch {
+          dataFim = lote.dataFim;
+        }
+      }
+    }
+
+    return {
+      id: lote.id,
+      nome: lote.nome,
+      preco: lote.preco,
+      quantidade: lote.quantidade,
+      dataInicio: dataInicio,
+      dataFim: dataFim,
+      eventoId: this.evento.id
+    };
+  });
+
+  console.log('Lotes formatados para API:', lotesParaApi); // DEBUG
+
+  this.spinner.show();
+
+  this.loteService
+    .saveLote(this.evento.id, lotesParaApi)
+    .subscribe({
+      next: () => {
+        this.toastr.success('Lotes salvos com sucesso!', 'Sucesso!');
+      },
+      error: (error: any) => {
+        console.error('Erro detalhado:', error.error?.errors);
+        this.toastr.error('Erro ao tentar salvar lotes.', 'Erro');
+      },
+      complete: () => this.spinner.hide()
+    });
+}
+
+public retornaTituloLote(nome: string): string{
+  return nome === null || nome === '' ? 'Nome do lote' : nome;
+}
+
+criarLote(lote: Lote): FormGroup {
+  const formGroup = this.fb.group({
+    id: [lote.id],
+    nome: [lote.nome, Validators.required],
+    preco: [lote.preco, Validators.required],
+    quantidade: [lote.quantidade, Validators.required],
+    dataInicio: [lote.dataInicio ? new Date(lote.dataInicio) : null],
+    dataFim: [lote.dataFim ? new Date(lote.dataFim) : null]
+  });
+
+  setTimeout(() => {
+    this.setupLoteDatePickers();
+  });
+
+  return formGroup;
+}
+
+private setupLoteDatePickers(): void {
+  setTimeout(() => {
+    const loteElements = document.querySelectorAll('[data-lote-index]');
+
+    loteElements.forEach((element) => {
+      const index = element.getAttribute('data-lote-index');
+      if (index) {
+        const dataInicioInput = document.getElementById(`dataInicio_${index}`) as HTMLInputElement;
+        const dataFimInput = document.getElementById(`dataFim_${index}`) as HTMLInputElement;
+
+        if (dataInicioInput) {
+          this.initLoteDatePicker(dataInicioInput, 'dataInicio', parseInt(index));
+        }
+
+        if (dataFimInput) {
+          this.initLoteDatePicker(dataFimInput, 'dataFim', parseInt(index));
+        }
+      }
+    });
+  });
+}
 
   ngAfterViewInit(): void {
     this.fp = flatpickr(this.picker.nativeElement, {
@@ -124,12 +338,31 @@ export class EventoDetalhe implements AfterViewInit {
     });
   }
 
+  ngOnDestroy(): void {
+  Object.values(this.lotesFlatpickrInstances).forEach(instance => {
+    instance.destroy();
+  });
+
+  if (this.fp) {
+    this.fp.destroy();
+  }
+}
+
+  public cssValidator(campoForm: AbstractControl | null): any {
+    return campoForm?.invalid && (campoForm?.touched || campoForm?.dirty)
+      ? { 'is-invalid': true }
+      : {};
+  }
+
+  get fg() {
+  return this.form.get('lotes') as FormArray;
+}
 
   public resetForm(): void {
     this.form.reset();
   }
 
-public salvarAlteracao(): void {
+  public salvarAlteracao(): void {
   if (this.form.invalid) return;
 
   this.spinner.show();
@@ -139,20 +372,20 @@ public salvarAlteracao(): void {
     dataEvento: new Date(this.form.value.dataEvento).toISOString()
   };
 
-  if (this.estadoSalvar === 'post') {
-    this.eventoService.postEvento(EventoParaApi).subscribe({
-      next: () => {
-        this.toastr.success('Evento salvo com sucesso!', 'Sucesso');
-      },
-      error: (error) => {
-        console.log('ERROS DO BACKEND:', error.error?.errors);
-        this.toastr.error('Erro ao salvar', 'Erro');
-        this.spinner.hide();
-      },
-      complete: () => this.spinner.hide()
-    });
-
-  } else {
+if (this.estadoSalvar === 'post') {
+  this.eventoService.postEvento(EventoParaApi).subscribe({
+    next: (eventoCriado: Evento) => {
+      this.toastr.success('Evento salvo com sucesso!', 'Sucesso');
+      this.spinner.hide();
+      this.router.navigate(['/eventos/detalhe', eventoCriado.id]);
+    },
+    error: (error) => {
+      console.log('ERROS DO BACKEND:', error.error?.errors);
+      this.toastr.error('Erro ao salvar', 'Erro');
+      this.spinner.hide();
+    }
+  });
+}else {
     this.eventoService.putEvento(this.evento.id, EventoParaApi).subscribe({
       next: () => {
         this.toastr.success('Evento atualizado com sucesso!', 'Sucesso');
@@ -167,6 +400,53 @@ public salvarAlteracao(): void {
   }
 }
 
+  public removerLote(template: TemplateRef<any>,
+                      indice: number): void {
 
+  this.loteAtual.id = this.lotes.get(indice + '.id')?.value;
+  this.loteAtual.nome = this.lotes.get(indice + '.nome')?.value;
+  this.loteAtual.indice = indice;
+
+  this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+  }
+
+public confirmDeleteLote(): void {
+  this.modalRef?.hide();
+  this.spinner.show();
+
+  this.loteService.deleteLote(this.evento.id, this.loteAtual.id)
+    .subscribe({
+      next: () => {
+        this.toastr.success('Lote deletado com sucesso', 'Sucesso');
+
+        const index = this.lotes.controls.findIndex(
+          x => x.value.id === this.loteAtual.id
+        );
+
+        if (index !== -1) {
+          setTimeout(() => {
+            this.lotes.removeAt(index);
+            this.cdr.detectChanges();
+          });
+        }
+      },
+      error: (error: any) => {
+        this.toastr.error(
+          `Erro ao tentar deletar o lote ${this.loteAtual.id}`,
+          'Erro'
+        );
+        console.error(error);
+      }
+    })
+    .add(() => this.spinner.hide());
+}
+
+
+
+
+public declineDeleteLote():void{
+  this.modalRef?.hide()
+}
 
 }
+
