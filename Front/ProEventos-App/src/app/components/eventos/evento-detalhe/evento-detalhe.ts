@@ -30,6 +30,7 @@ import { LoteService } from '../../../services/lote.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ChangeDetectorRef } from '@angular/core';
 import { NgxCurrencyDirective } from 'ngx-currency';
+import { environment } from '../../../../environments/environment';
 
 
 
@@ -52,6 +53,7 @@ export class EventoDetalhe implements AfterViewInit {
   public eventoId!: number;
   modalRef?: BsModalRef;
   loteAtual = {id: 0, nome: '', indice: 0};
+  imagemURL: string = 'assets/upload.png';  file!: File;
 
   private lotesFlatpickrInstances: { [key: string]: flatpickr.Instance } = {};
   @ViewChild('picker', { static: true })
@@ -167,6 +169,11 @@ public carregarEvento(): void {
             : null
         });
 
+        if (this.evento.imagemURL !== '')
+        {
+          this.imagemURL = environment.apiUrl + 'Resources/Images/' + this.evento.imagemURL;  // ← CORRETO
+        }
+
         this.fp?.setDate(this.form.get('dataEvento')?.value, false);
       },
       error: () => {
@@ -189,7 +196,7 @@ public carregarEvento(): void {
       qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imagemURL: ['', Validators.required],
+      imagemURL: [''],
       lotes: this.fb.array([])
     });
   }
@@ -210,13 +217,11 @@ public salvarLotes(): void {
   console.log('Valores originais dos lotes:', this.lotes.value); // DEBUG
 
   const lotesParaApi = this.lotes.value.map((lote: any) => {
-    // Data Início: dd/MM/yyyy HH:mm:ss
     let dataInicio = null;
     if (lote.dataInicio) {
       if (lote.dataInicio instanceof Date) {
         dataInicio = this.formatDatePtBr(lote.dataInicio);
       } else {
-        // Tenta converter string para Date
         try {
           const date = new Date(lote.dataInicio);
           if (!isNaN(date.getTime())) {
@@ -362,7 +367,7 @@ private setupLoteDatePickers(): void {
     this.form.reset();
   }
 
-  public salvarAlteracao(): void {
+public salvarAlteracao(): void {
   if (this.form.invalid) return;
 
   this.spinner.show();
@@ -372,30 +377,72 @@ private setupLoteDatePickers(): void {
     dataEvento: new Date(this.form.value.dataEvento).toISOString()
   };
 
-if (this.estadoSalvar === 'post') {
-  this.eventoService.postEvento(EventoParaApi).subscribe({
-    next: (eventoCriado: Evento) => {
-      this.toastr.success('Evento salvo com sucesso!', 'Sucesso');
-      this.spinner.hide();
-      this.router.navigate(['/eventos/detalhe', eventoCriado.id]);
-    },
-    error: (error) => {
-      console.log('ERROS DO BACKEND:', error.error?.errors);
-      this.toastr.error('Erro ao salvar', 'Erro');
-      this.spinner.hide();
-    }
-  });
-}else {
-    this.eventoService.putEvento(this.evento.id, EventoParaApi).subscribe({
-      next: () => {
-        this.toastr.success('Evento atualizado com sucesso!', 'Sucesso');
+  if (this.estadoSalvar === 'post') {
+    this.eventoService.postEvento(EventoParaApi).subscribe({
+      next: (eventoCriado: Evento) => {
+        this.eventoId = eventoCriado.id;
+
+        if (this.file) {
+          this.eventoService.postUpload(this.eventoId, this.file).subscribe({
+            next: (eventoAtualizado) => {
+              this.evento = eventoAtualizado;
+              this.imagemURL = environment.apiUrl + 'Resources/Images/' + this.evento.imagemURL;
+
+              this.cdr.detectChanges();
+
+              this.toastr.success('Evento e imagem salvos com sucesso!', 'Sucesso');
+              this.spinner.hide();
+              this.router.navigate(['/eventos/detalhe', eventoCriado.id]);
+            },
+            error: (error) => {
+              console.error('Erro no upload:', error);
+              this.toastr.warning('Evento criado, mas imagem não foi enviada', 'Atenção');
+              this.spinner.hide();
+              this.router.navigate(['/eventos/detalhe', eventoCriado.id]);
+            }
+          });
+        } else {
+          this.toastr.success('Evento salvo com sucesso!', 'Sucesso');
+          this.spinner.hide();
+          this.router.navigate(['/eventos/detalhe', eventoCriado.id]);
+        }
       },
       error: (error) => {
         console.log('ERROS DO BACKEND:', error.error?.errors);
         this.toastr.error('Erro ao salvar', 'Erro');
         this.spinner.hide();
+      }
+    });
+  } else {
+    this.eventoService.putEvento(this.evento.id, EventoParaApi).subscribe({
+      next: () => {
+        if (this.file) {
+          this.eventoService.postUpload(this.evento.id, this.file).subscribe({
+            next: (eventoAtualizado) => {
+              this.evento = eventoAtualizado;
+              this.imagemURL = environment.apiUrl + 'Resources/Images/' + this.evento.imagemURL;
+
+              this.cdr.detectChanges();
+
+              this.toastr.success('Evento e imagem atualizados!', 'Sucesso');
+              this.spinner.hide();
+            },
+            error: (error) => {
+              console.error('Erro no upload:', error);
+              this.toastr.warning('Evento atualizado, mas imagem não foi enviada', 'Atenção');
+              this.spinner.hide();
+            }
+          });
+        } else {
+          this.toastr.success('Evento atualizado com sucesso!', 'Sucesso');
+          this.spinner.hide();
+        }
       },
-      complete: () => this.spinner.hide()
+      error: (error) => {
+        console.log('ERROS DO BACKEND:', error.error?.errors);
+        this.toastr.error('Erro ao salvar', 'Erro');
+        this.spinner.hide();
+      }
     });
   }
 }
@@ -447,6 +494,49 @@ public confirmDeleteLote(): void {
 public declineDeleteLote():void{
   this.modalRef?.hide()
 }
+
+onFileChange(event: Event) {
+  const input = event.target as HTMLInputElement;
+
+  if (!input.files || input.files.length === 0) return;
+
+  this.file = input.files[0];
+
+  this.form.patchValue({
+    imagemURL: this.file.name
+  });
+
+  this.imagemURL = URL.createObjectURL(this.file);
+}
+
+uploadImagem(): void {
+  if (!this.file) {
+    this.toastr.warning('Selecione uma imagem primeiro');
+    return;
+  }
+
+  this.spinner.show();
+
+  this.eventoService
+    .postUpload(this.eventoId, this.file)
+    .subscribe({
+      next: (eventoAtualizado) => {
+        this.evento = eventoAtualizado;
+
+        this.imagemURL = environment.apiUrl + 'Resources/Images/' + this.evento.imagemURL;
+
+        this.toastr.success('Imagem atualizada com sucesso!', 'Sucesso!');
+        this.spinner.hide();
+      },
+      error: (error) => {
+        console.error('Erro detalhado:', error);
+        this.toastr.error('Erro ao fazer upload da imagem', 'Erro!');
+        this.spinner.hide();
+      }
+    });
+}
+
+
 
 }
 

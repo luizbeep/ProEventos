@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Evento } from '../models/Evento';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventoService {
 
-  private readonly baseURL = 'http://localhost:5279/api/eventos';
+  private readonly baseURL = environment.apiUrl + 'api/eventos';
 
   constructor(private http: HttpClient) {}
 
@@ -62,5 +63,17 @@ export class EventoService {
         { responseType: 'text' }
       );
     }
+
+postUpload(eventoId: number, file: File): Observable<Evento> {
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return this.http
+    .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData)
+    .pipe(
+      map(evento => this.mapEvento(evento))
+    );
+}
 
 }

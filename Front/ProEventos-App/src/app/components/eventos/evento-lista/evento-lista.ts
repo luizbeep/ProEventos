@@ -20,6 +20,7 @@ import { EventoService } from '../../../services/evento.service';
 import { Evento } from '../../../models/Evento';
 import { DateTimeFormatPipe } from '../../../helpers/DateTimeFormat.pipe';
 import { TituloComponent } from '../../../shared/titulo/titulo.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-evento-lista',
@@ -103,6 +104,12 @@ export class EventoLista {
 
   alterarImagem() {
     this.exibirImagem = !this.exibirImagem;
+  }
+
+  public mostraImagem(imagemURL: string): string{
+    return (imagemURL !== '')
+    ? `${environment.apiUrl}Resources/Images/${imagemURL}`
+    : 'assets/semImagem.png'
   }
 
   openModal(event: MouseEvent, template: TemplateRef<any>, tema: string, eventoId: number): void {

@@ -4,6 +4,7 @@ using ProEventos.Application.Contratos;
 using ProEventos.Persistence;
 using ProEventos.Persistence.Contextos;
 using AutoMapper;
+using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ProEventosContext>(options =>
@@ -55,5 +56,10 @@ app.UseCors("AllowAngular");
 
 app.UseAuthorization();
 app.MapControllers();
+
+app.UseStaticFiles(new StaticFileOptions(){
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+    RequestPath = new PathString("/Resources")
+});
 
 app.Run();

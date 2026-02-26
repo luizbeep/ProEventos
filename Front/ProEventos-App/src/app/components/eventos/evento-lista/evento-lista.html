@@ -48,7 +48,7 @@
 
         <td class="d-none d-md-table-cell">
         <img
-          [src]="'assets/' + evento.imagemURL"
+          [src]="mostraImagem(evento.imagemURL)"
           [style.width.px]="widthImg"
           [style.margin.px]="marginImg"
           class="img-fluid imagem-evento"
@@ -81,6 +81,8 @@
             (click)="openModal($event, template, evento.tema, evento.id); $event.stopPropagation()">
             <i class="fa fa-trash"></i>
           </button>
+
+
         </td>
       </tr>
     </tbody>
