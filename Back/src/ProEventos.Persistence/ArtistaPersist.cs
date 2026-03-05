@@ -56,7 +56,8 @@ namespace ProEventos.Persistence
                 query = query.Include(a => a.ArtistasEvento).ThenInclude(ae => ae.Evento);
             }
 
-            query = query.OrderBy(a => a.Id).Where(a => a.Nome.ToLower().Contains(nome.ToLower()));
+            query = query.OrderBy(a => a.Id)
+            .Where(a => a.User.PrimeiroNome.ToLower().Contains(nome.ToLower()));
 
 
             return await query.ToArrayAsync();

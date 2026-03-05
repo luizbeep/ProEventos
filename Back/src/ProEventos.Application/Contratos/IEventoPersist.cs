@@ -5,8 +5,8 @@ namespace ProEventos.Application.Contratos
 {
     public interface IEventoPersist
     {
-        Task<Evento> GetEventoByIdAsync(int eventoId, bool includeArtistas = false);
-        Task<Evento[]> GetAllEventosAsync(bool includeArtistas = false);
-        Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includeArtistas = false);
+        Task<Evento[]> GetAllEventosByTemaAsync(int userId, string tema, bool includeArtistas = false);
+        Task<Evento[]> GetAllEventosAsync(int userId, bool includeArtistas = false);
+        Task<Evento> GetEventoByIdAsync(int userId, int eventoId, bool includeArtistas = false);
     }
 }

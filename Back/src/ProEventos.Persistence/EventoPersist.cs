@@ -20,7 +20,7 @@ namespace ProEventos.Persistence
             _context = context;
         }
 
-        public async Task<Evento[]> GetAllEventosAsync(bool includeArtistas = false)
+        public async Task<Evento[]> GetAllEventosAsync(int userId, bool includeArtistas = false)
         {
             IQueryable<Evento> query = _context.Eventos.Include(e => e.lotes).Include(e => e.RedesSociais).AsNoTracking();
 
@@ -29,13 +29,13 @@ namespace ProEventos.Persistence
                 query = query.Include(e => e.ArtistasEvento).ThenInclude(ae => ae.Artista);
             }
 
-            query = query.OrderBy(e => e.Id);
+            query = query.Where(e => e.UserId == userId).OrderBy(e => e.Id);
 
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includeArtistas = false)
+        public async Task<Evento[]> GetAllEventosByTemaAsync(int userId, string tema, bool includeArtistas = false)
         {
             IQueryable<Evento> query = _context.Eventos.Include(e => e.lotes).Include(e => e.RedesSociais).AsNoTracking()
 ;
@@ -45,14 +45,15 @@ namespace ProEventos.Persistence
                 query = query.Include(e => e.ArtistasEvento).ThenInclude(ae => ae.Artista);
             }
 
-            query = query.OrderBy(e => e.Id).Where(e => e.Tema.ToLower().Contains(tema.ToLower()));
-
+            query = query.OrderBy(e => e.Id)
+                         .Where(e => e.Tema.ToLower().Contains(tema.ToLower()) && 
+                                     e.UserId == userId);
             return await query.ToArrayAsync();
 
             
         }
 
-        public async Task<Evento> GetEventoByIdAsync(int eventoId, bool includeArtistas = false)
+        public async Task<Evento> GetEventoByIdAsync(int userId, int eventoId, bool includeArtistas = false)
         {
             IQueryable<Evento> query = _context.Eventos
                 .Include(e => e.lotes)
@@ -63,7 +64,7 @@ namespace ProEventos.Persistence
                 query = query.Include(e => e.ArtistasEvento).ThenInclude(ae => ae.Artista);
             }
 
-            return await query.AsNoTracking().FirstOrDefaultAsync(e => e.Id == eventoId);
+            return await query.AsNoTracking().FirstOrDefaultAsync(e => e.Id == eventoId && e.UserId == userId);
         }
 
     }

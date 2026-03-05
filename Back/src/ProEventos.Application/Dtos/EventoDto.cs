@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ProEventos.Domain;
 namespace ProEventos.Application.Dtos
 {    
@@ -33,7 +35,7 @@ namespace ProEventos.Application.Dtos
         [Display(Name = "E-Mail")]
         [EmailAddress(ErrorMessage = "É necessário ser um {0} valido")]
         public string Email { get; set; }   
-
+        public int UserId { get; set; }
         public IEnumerable<LoteDto>? Lotes { get; set; }
         public IEnumerable<RedeSocialDto>? RedesSociais { get; set; }
         public IEnumerable<ArtistaDto>? ArtistasEventos { get; set; }
