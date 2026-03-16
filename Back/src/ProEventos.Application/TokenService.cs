@@ -20,7 +20,7 @@ namespace ProEventos.Application
         private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        public readonly SymmetricSecurityKey _key;
+        private SymmetricSecurityKey _key;
 
         public TokenService(IConfiguration config,
                             UserManager<User> userManager,
@@ -29,36 +29,68 @@ namespace ProEventos.Application
             _config = config;
             _userManager = userManager;
             _mapper = mapper;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            
+            var tokenKey = _config["TokenKey"];
+            if (string.IsNullOrEmpty(tokenKey))
+            {
+                throw new Exception("TokenKey não configurada no appsettings.json");
+            }
+            
+            if (tokenKey.Length < 32)
+            {
+                throw new Exception("TokenKey deve ter pelo menos 32 caracteres");
+            }
+            
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
+            
+            Console.WriteLine($"TokenService inicializado com chave de {tokenKey.Length} caracteres");
         }
+        
         public async Task<string> CreateToken(UserUpdateDto userUpdateDto)
         {
-            var user = _mapper.Map<User>(userUpdateDto);
-            
-            var claims = new List<Claim>
+            try
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
+                Console.WriteLine($"Criando token para usuário: {userUpdateDto.UserName}");
+                
+                // Buscar o usuário completo do banco
+                var user = await _userManager.FindByNameAsync(userUpdateDto.UserName);
+                if (user == null)
+                {
+                    throw new Exception($"Usuário {userUpdateDto.UserName} não encontrado");
+                }
+                
+                Console.WriteLine($"Usuário encontrado com ID: {user.Id}");
+                
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // "nameid": "3"
+                    new Claim(ClaimTypes.Name, user.UserName)                  // "unique_name": "espectra"
+                };
 
-            var roles = await _userManager.GetRolesAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddDays(1),
+                    SigningCredentials = creds
+                };
 
-            var tokenDescription = new SecurityTokenDescriptor
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
+                
+                Console.WriteLine("Token criado com sucesso!");
+                return tokenString;
+            }
+            catch (Exception ex)
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescription);
-
-            return tokenHandler.WriteToken(token);
+                Console.WriteLine($"Erro ao criar token: {ex.Message}");
+                throw;
+            }
         }
     }
 }

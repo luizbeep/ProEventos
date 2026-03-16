@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ProEventos.API.Extensions;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
@@ -18,13 +21,16 @@ namespace ProEventos.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
+        private readonly IConfiguration _configuration; // ADICIONADO
 
 
         public AccountController(IAccountService accountService,
-                                ITokenService tokenService)
+                                ITokenService tokenService, IConfiguration configuration)
         {
             _accountService = accountService;
             _tokenService = tokenService;
+            _configuration = configuration; // ADICIONADO
+
         }
         
         [HttpGet("GetUser")]
@@ -52,10 +58,20 @@ namespace ProEventos.API.Controllers
             {
                 if(await _accountService.UserExists(userDto.UserName))
                     return BadRequest("Usuário já existe");
-                
                 var user = await _accountService.CreateAccountAsync(userDto);
                 if (user != null)
-                    return Ok(user);
+                {
+                    var userUpdateDto = await _accountService.GetUserByUserNameAsync(user.UserName);
+
+                    var token = await _tokenService.CreateToken(userUpdateDto);
+
+                    return Ok(new
+                    {
+                        userName = userUpdateDto.UserName,
+                        primeiroNome = userUpdateDto.PrimeiroNome,
+                        token = token
+                    });
+                }
 
                 return BadRequest("Usuário não criado, tente novamente mais tarde.");
             }
@@ -98,13 +114,24 @@ namespace ProEventos.API.Controllers
         {
             try
             {
+                if(userUpdateDto.UserName != User.GetUserName()){
+                    return Unauthorized("Usuário Inválido");
+                }
+
                 var user = await _accountService.GetUserByUserNameAsync(User.GetUserName());
                 if (user == null) return Unauthorized("Usuário Inválido");
                 
                 var userReturn = await _accountService.UpdateAccount(userUpdateDto);
                 if (userReturn == null) return NoContent();
 
-                return Ok(userReturn);
+                return Ok(
+                    new
+                    {
+                        userName = userReturn.UserName,
+                        PrimeiroNome = userReturn.PrimeiroNome,
+                        token = _tokenService.CreateToken(userReturn).Result
+                    }
+                );
             }
             catch (Exception ex)
             {

@@ -9,30 +9,46 @@ import { EventoDetalhe } from './components/eventos/evento-detalhe/evento-detalh
 import { User } from './components/user/user';
 import { Login } from './components/user/login/login';
 import { Registration } from './components/user/registration/registration';
+import { AuthGuard } from './guard/auth-guard';
+import { HomeComponent } from './components/home/home.component';
 
 export const routes: Routes = [
-  {
-  path: 'user',
-  component: User,
-  children: [
-    { path: 'login', component: Login },
-    { path: 'registration', component: Registration },
-    { path: 'perfil', component: PerfilComponent },
-  ]
-},
 
-  {path: 'eventos', redirectTo: 'eventos/lista'},
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  {
-    path: 'eventos',
-    component: Eventos,
-    children: [
-      { path: 'lista', component: EventoLista },
-      { path: 'detalhe', component: EventoDetalhe },
-      { path: 'detalhe/:id', component: EventoDetalhe }
-    ]
-  },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  { path: 'home', component: HomeComponent },
   { path: 'artistas', component: Artistas },
   { path: 'contatos', component: ContatosComponent },
+
+  {
+    path: 'user',
+    component: User,
+    children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' }, // 👈 aqui
+      { path: 'login', component: Login },
+      { path: 'registration', component: Registration },
+      { path: 'perfil', component: PerfilComponent, canActivate: [AuthGuard] }
+    ]
+  },
+
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    children: [
+
+      { path: 'dashboard', component: DashboardComponent },
+
+      {
+        path: 'eventos',
+        component: Eventos,
+        children: [
+          { path: 'lista', component: EventoLista },
+          { path: 'detalhe', component: EventoDetalhe },
+          { path: 'detalhe/:id', component: EventoDetalhe }
+        ]
+      }
+
+    ]
+  }
+
 ];

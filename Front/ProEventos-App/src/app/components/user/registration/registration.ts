@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ValidatorField } from '../../../util/ValidatorField';
-
+import { AccountService } from '../../../services/account.service';
+import { ToastrService } from 'ngx-toastr';
+import { User } from '../../../models/identity/user';
 
 @Component({
   selector: 'app-registration',
@@ -20,8 +22,12 @@ import { ValidatorField } from '../../../util/ValidatorField';
 })
 
 export class Registration {
+  user = {} as User;
   form!: FormGroup;
-  constructor(public fb: FormBuilder){
+  constructor(private fb: FormBuilder,
+              private accountService: AccountService,
+              private router: Router,
+              private toaster: ToastrService){
     this.validation()
 
   }
@@ -34,7 +40,7 @@ export class Registration {
   private validation(): void {
 
   const formOptions: AbstractControlOptions = {
-    validators: ValidatorField.MustMatch('senha', 'confirmeSenha')
+    validators: ValidatorField.MustMatch('password', 'confirmePassword')
   };
 
   this.form = this.fb.group({
@@ -45,10 +51,18 @@ export class Registration {
     email: ['', [Validators.required, Validators.email]],
     userName: ['',
     [Validators.required, Validators.maxLength(16), Validators.minLength(4)]],
-    senha: ['', [Validators.required, Validators.minLength(6)]],
-    confirmeSenha: ['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(4)]],
+    confirmePassword: ['', Validators.required],
   }, formOptions);
 
+  }
+
+  register(): void{
+    this.user = { ...this.form.value};
+    this.accountService.register(this.user).subscribe(
+      () => this.router.navigateByUrl('/dashboard'),
+      (error: any) => this.toaster.error(error.error)
+    )
   }
 
 }

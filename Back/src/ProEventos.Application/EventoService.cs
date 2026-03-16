@@ -32,7 +32,6 @@ namespace ProEventos.Application
             {
                 var evento = _mapper.Map<Evento>(model);
                 evento.UserId = userId;
-
                 _geralPersist.Add(evento);
 
                 if (await _geralPersist.SaveChangesAsync())
@@ -76,6 +75,7 @@ namespace ProEventos.Application
                 throw new Exception(ex.Message);
             }
         }
+
 
 
         public async Task<bool> DeleteEvento(int userId, int eventoId)

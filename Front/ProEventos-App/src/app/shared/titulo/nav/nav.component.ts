@@ -3,6 +3,7 @@ import { Route, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CommonModule } from '@angular/common';
+import { AccountService } from '../../../services/account.service';
 
 @Component({
   selector: 'app-nav',
@@ -20,10 +21,16 @@ import { CommonModule } from '@angular/common';
 })
 export class NavComponent {
   isCollapsed = true;
-
-  constructor(private router: Router) { }
+  constructor(public accountService: AccountService,
+              private router: Router) { }
 
   showMenu(): boolean {
     return this.router.url !== '/user/login';
   }
+
+  logout(): void{
+    this.accountService.logout();
+    this.router.navigateByUrl('/user/login')
+  }
+
 }

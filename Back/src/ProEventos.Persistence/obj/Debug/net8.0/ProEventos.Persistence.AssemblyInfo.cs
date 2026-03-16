@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProEventos.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+25b59a627ca07058b9254c6922492a38c2c2ea79")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b9de3996076d23f1a0e94bcc376bf7b54945c1dd")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProEventos.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProEventos.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

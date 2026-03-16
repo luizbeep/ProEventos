@@ -3,7 +3,7 @@
 
     <h3 class="text-center mb-4">Cadastro de Usuário</h3>
 
-  <form class="register-form" [formGroup]="form">
+  <form class="register-form" [formGroup]="form" (ngSubmit)="register()">
 
       <div class="form-group">
         <label>Primeiro Nome</label>
@@ -87,14 +87,14 @@
           type="password"
           class="form-control"
           placeholder="Digite o seu nome de usuário"
-          formControlName="senha"
-          [ngClass]="{ 'is-invalid': f.senha?.invalid && f.senha?.touched }"
+          formControlName="password"
+          [ngClass]="{ 'is-invalid': f.password?.invalid && f.password?.touched }"
         />
 
-        <div *ngIf="f.senha?.hasError('required') && f.senha?.touched" class="invalid-feedback">
+        <div *ngIf="f.password?.hasError('required') && f.password?.touched" class="invalid-feedback">
           A senha é obrigatória
         </div>
-        <div *ngIf="f.senha?.hasError('minlength') && f.senha?.touched" class="invalid-feedback">
+        <div *ngIf="f.password?.hasError('minlength') && f.password?.touched" class="invalid-feedback">
           A senha precisa de pelo menos de 6 caracteres
         </div>
 
@@ -106,16 +106,16 @@
           type="password"
           class="form-control"
           placeholder="Confirme sua senha"
-          formControlName="confirmeSenha"
-          [ngClass]="{ 'is-invalid': f.confirmeSenha?.invalid && f.confirmeSenha?.touched }"
+          formControlName="confirmePassword"
+          [ngClass]="{ 'is-invalid': f.confirmePassword?.invalid && f.confirmePassword?.touched }"
         />
 
-         <div *ngIf="f.confirmeSenha?.hasError('required') && f.confirmeSenha?.touched" class="invalid-feedback">
+         <div *ngIf="f.confirmePassword?.hasError('required') && f.confirmePassword?.touched" class="invalid-feedback">
           Confirme a sua senha
         </div>
 
         <div
-          *ngIf="f.confirmeSenha?.hasError('mustMatch') && f.confirmeSenha?.touched"
+          *ngIf="f.confirmePassword?.hasError('mustMatch') && f.confirmePassword?.touched"
           class="invalid-feedback"
         >
           As senhas são diferentes
@@ -135,7 +135,7 @@
       </div>
 
       <div class="buttons-wrapper">
-        <button type="button" class="btn btn-success btn-lg">
+        <button [disabled]="!form.valid" type="submit" class="btn btn-success btn-lg">
           Registrar
         </button>
 

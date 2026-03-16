@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Evento } from '../models/Evento';
@@ -8,7 +8,6 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class EventoService {
-
   private readonly baseURL = environment.apiUrl + 'api/eventos';
 
   constructor(private http: HttpClient) {}
@@ -46,6 +45,7 @@ export class EventoService {
   }
 
   public postEvento(evento: Evento): Observable<Evento> {
+
     return this.http
       .post<Evento>(this.baseURL, evento)
       .pipe(map(evento => this.mapEvento(evento)));
