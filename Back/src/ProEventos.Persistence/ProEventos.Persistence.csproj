@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProEventos.Domain\ProEventos.Domain.csproj" />
-    <ProjectReference Include="..\ProEventos.Application\ProEventos.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

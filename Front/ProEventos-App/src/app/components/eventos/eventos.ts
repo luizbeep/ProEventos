@@ -133,7 +133,7 @@ public getEventos(): void {
 
   this.eventoService.getEventos().subscribe({
     next: response => {
-      this.eventos = response;
+      this.eventos = response.result ?? [];
       this.eventosFiltrados = this.eventos;
       this.cdr.detectChanges();
     },
@@ -146,7 +146,6 @@ public getEventos(): void {
     }
   });
 }
-
 
 
 

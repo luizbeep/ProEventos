@@ -1,8 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Evento } from '../models/Evento';
 import { environment } from '../../environments/environment';
+import { PaginatedResult } from '../models/Pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -26,17 +27,39 @@ export class EventoService {
     return eventos.map(e => this.mapEvento(e));
   }
 
- public getEventos(): Observable<Evento[]> {
-    return this.http
-      .get<Evento[]>(this.baseURL)
-      .pipe(map(eventos => this.mapEventos(eventos)));
+public getEventos(page?: number, itemsPerPage?: number, term?: string): Observable<PaginatedResult<Evento[]>> {
+  let params = new HttpParams();
+
+  if (page !== undefined && page !== null && itemsPerPage !== undefined && itemsPerPage !== null) {
+    params = params.append('pageNumber', page.toString());
+    params = params.append('pageSize', itemsPerPage.toString());
   }
 
- public getEventosByTema(tema: string): Observable<Evento[]> {
-    return this.http
-      .get<Evento[]>(`${this.baseURL}/${tema}/tema`)
-      .pipe(map(eventos => this.mapEventos(eventos)));
-  }
+  if(term != null && term != '')
+    params = params.append('term', term);
+
+  return this.http
+    .get<Evento[]>(this.baseURL, { observe: 'response', params })
+    .pipe(
+      map(response => {
+        const paginatedResult = new PaginatedResult<Evento[]>();
+
+        paginatedResult.result = this.mapEventos(response.body || []);
+
+        if (response.headers.has('Pagination')) {
+          const paginationData = JSON.parse(response.headers.get('Pagination') || '');
+          // Mapeia os dados da API para a estrutura da classe Pagination
+          paginatedResult.pagination.CurrentPage = paginationData.currentPage;
+          paginatedResult.pagination.ItemsPerPage = paginationData.itemsPerPage;
+          paginatedResult.pagination.TotalItems = paginationData.totalItems;
+          paginatedResult.pagination.TotalPages = paginationData.totalPages;
+        }
+
+        return paginatedResult;
+      })
+    );
+}
+
 
  public getEventoById(id: number): Observable<Evento> {
     return this.http

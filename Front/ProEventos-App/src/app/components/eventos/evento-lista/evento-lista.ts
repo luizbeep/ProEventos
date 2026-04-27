@@ -18,9 +18,13 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 import { EventoService } from '../../../services/evento.service';
 import { Evento } from '../../../models/Evento';
-import { DateTimeFormatPipe } from '../../../helpers/DateTimeFormat.pipe';
+// REMOVA O DateTimeFormatPipe
+// import { DateTimeFormatPipe } from '../../../helpers/DateTimeFormat.pipe';
 import { TituloComponent } from '../../../shared/titulo/titulo.component';
 import { environment } from '../../../../environments/environment';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { PaginatedResult, Pagination } from '../../../models/Pagination';
+import { debounce, debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-evento-lista',
@@ -33,7 +37,8 @@ import { environment } from '../../../../environments/environment';
     RouterOutlet,
     RouterLink,
     TituloComponent,
-    DateTimeFormatPipe
+    PaginationModule,
+
   ],
   providers: [EventoService, DatePipe],
   templateUrl: './evento-lista.html',
@@ -43,7 +48,6 @@ export class EventoLista {
   modalRef?: BsModalRef;
 
   public tema: string = "";
-
   public eventoId: number = 0;
 
   isCollapsed = true;
@@ -52,23 +56,12 @@ export class EventoLista {
   eventos: Evento[] = [];
   eventosFiltrados: Evento[] = [];
 
+  public pagination: Pagination = new Pagination();
+
   widthImg = 120;
   marginImg = 2;
   exibirImagem = true;
 
-  private _filtroLista = '';
-  tituloPagina = 'Eventos';
-
-  get filtroLista() {
-    return this._filtroLista;
-  }
-
-  set filtroLista(value: string) {
-    this._filtroLista = value;
-    this.eventosFiltrados = value
-      ? this.filtrarEventos(value)
-      : this.eventos;
-  }
 
   constructor(
     private eventoService: EventoService,
@@ -81,9 +74,17 @@ export class EventoLista {
   ) {
     afterNextRender(() => {
       if (isPlatformBrowser(this.platformId)) {
+        this.pagination.CurrentPage = 1;
+        this.pagination.ItemsPerPage = 3;
         this.carregarEventos();
       }
     });
+  }
+
+  formatarData(data: Date | string | undefined): string {
+    if (!data) return '-';
+    const d = new Date(data);
+    return d.toLocaleDateString('pt-BR');
   }
 
   toggleEventos() {
@@ -93,13 +94,52 @@ export class EventoLista {
     }
   }
 
-  filtrarEventos(filtrarPor: string): Evento[] {
-    filtrarPor = filtrarPor.toLowerCase();
-    return this.eventos.filter(evento =>
-      evento.tema.toLowerCase().includes(filtrarPor) ||
-      evento.local.toLowerCase().includes(filtrarPor) ||
-      (evento.dataEvento?.toString().toLowerCase().includes(filtrarPor))
-    );
+  termoBuscaChanged: Subject<string> = new Subject<string>();
+
+  filtrarEventos(evt: any): void {
+    if(this.termoBuscaChanged.observers.length == 0){
+      this.termoBuscaChanged.pipe(debounceTime(500)).subscribe(
+        filtrarPor => {
+      this.eventoService.getEventos(
+      this.pagination.CurrentPage,
+      this.pagination.ItemsPerPage,
+      filtrarPor
+    ).subscribe({
+      next: (paginatedResult: PaginatedResult<Evento[]>) => {
+        console.log('📦 Dados recebidos:', {
+          totalEventos: paginatedResult.result?.length,
+          pagination: paginatedResult.pagination
+        });
+
+        this.eventos = paginatedResult.result ?? [];
+        this.eventosFiltrados = [...this.eventos];
+
+        console.log('📊 Eventos após atribuição:', this.eventos.length);
+        console.log('🔢 Eventos filtrados:', this.eventosFiltrados.length);
+
+        if (paginatedResult.pagination) {
+          this.pagination = { ...paginatedResult.pagination };
+          console.log('📄 Paginação atualizada:', this.pagination);
+        }
+
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.spinner.hide();
+          console.log('Spinner escondido');
+        }, 100);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar eventos:', error);
+        this.toastr.error('Erro ao carregar eventos');
+      },
+    })
+        }
+      )
+
+    }
+    this.termoBuscaChanged.next(evt.value);
+
   }
 
   alterarImagem() {
@@ -118,6 +158,11 @@ export class EventoLista {
     this.eventoId = eventoId;
     this.modalRef?.hide();
     this.modalRef = this.modalService.show(template);
+  }
+
+  public pageChanged(event: any): void {
+    this.pagination.CurrentPage = event.page;
+    this.carregarEventos();
   }
 
   confirm(): void {
@@ -151,19 +196,39 @@ export class EventoLista {
   }
 
   carregarEventos() {
-    this.spinner.show();
 
-    this.eventoService.getEventos().subscribe({
-      next: response => {
-        this.eventos = response;
-        this.eventosFiltrados = response;
+    this.eventoService.getEventos(
+      this.pagination.CurrentPage,
+      this.pagination.ItemsPerPage
+    ).subscribe({
+      next: (paginatedResult: PaginatedResult<Evento[]>) => {
+        console.log('📦 Dados recebidos:', {
+          totalEventos: paginatedResult.result?.length,
+          pagination: paginatedResult.pagination
+        });
+
+        this.eventos = paginatedResult.result ?? [];
+        this.eventosFiltrados = [...this.eventos];
+
+        console.log('📊 Eventos após atribuição:', this.eventos.length);
+        console.log('🔢 Eventos filtrados:', this.eventosFiltrados.length);
+
+        if (paginatedResult.pagination) {
+          this.pagination = { ...paginatedResult.pagination };
+          console.log('📄 Paginação atualizada:', this.pagination);
+        }
+
         this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.spinner.hide();
+          console.log('✅ Spinner escondido');
+        }, 100);
       },
-      error: () => {
+      error: (error) => {
+        console.error('❌ Erro ao carregar eventos:', error);
         this.toastr.error('Erro ao carregar eventos');
-        this.spinner.hide();
       },
-      complete: () => this.spinner.hide(),
     });
   }
 }

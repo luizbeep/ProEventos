@@ -94,6 +94,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "X.PagedList": {
+              "target": "Package",
+              "version": "[10.5.9, )"
             }
           },
           "imports": [
@@ -161,6 +165,9 @@
             "projectReferences": {
               "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj": {
                 "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj"
+              },
+              "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Persistence\\ProEventos.Persistence.csproj": {
+                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Persistence\\ProEventos.Persistence.csproj"
               }
             }
           }
@@ -340,9 +347,6 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj": {
-                "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Application\\ProEventos.Application.csproj"
-              },
               "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj": {
                 "projectPath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\ProEventos.Domain\\ProEventos.Domain.csproj"
               }

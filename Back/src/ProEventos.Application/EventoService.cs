@@ -6,6 +6,7 @@ using ProEventos.Domain;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
 using AutoMapper;
+using ProEventos.Persistence.Models;
 
 
 namespace ProEventos.Application
@@ -97,14 +98,26 @@ namespace ProEventos.Application
         }
 
 
-        public async Task<EventoDto[]> GetAllEventosAsync(int userId, bool includeArtistas = false)
+        public async Task<PageList<EventoDto>> GetAllEventosAsync(int userId, PageParams pageParams, bool includeArtistas = false)
         {
             try
             {
-                var eventos = await _eventoPersist.GetAllEventosAsync(userId, includeArtistas);
+                var eventos = await _eventoPersist.GetAllEventosAsync(userId, pageParams, includeArtistas);
                 if (eventos == null) return null;
 
-                return _mapper.Map<EventoDto[]>(eventos);
+                var eventosDto = _mapper.Map<List<EventoDto>>(eventos);
+
+                var resultado = new PageList<EventoDto>(
+                    eventosDto,
+                    eventos.TotalCount,
+                    eventos.CurrentPage,
+                    eventos.PageSize
+                );
+
+
+                return resultado;
+
+
             }
             catch (Exception ex)
             {
@@ -112,23 +125,6 @@ namespace ProEventos.Application
             }
         }
 
-
-        public async Task<EventoDto[]> GetAllEventosByTemaAsync(int userId, string tema, bool includeArtistas = false)
-        {
-            try
-            {
-                var eventos = await _eventoPersist.GetAllEventosByTemaAsync(userId, tema, includeArtistas);
-                if(eventos == null) return null;
-
-                var resultado = _mapper.Map<EventoDto[]>(eventos);
-
-                return resultado;
-            }
-            catch (System.Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }               
-        }
 
             public async Task<EventoDto> GetEventoByIdAsync(int userId, int eventoId, bool includeArtistas = false)
             {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain;
 using ProEventos.Persistence.Contextos;
-using ProEventos.Persistence.Contratos;
+using ProEventos.Domain.Contratos;
 
 namespace ProEventos.Persistence
 {
@@ -63,12 +63,7 @@ namespace ProEventos.Persistence
             return await query.ToArrayAsync();
         }
 
-        Task<Artista[]> IArtistaPersist.GetAllArtistasByIdAsync(int ArtistaId, bool includeEventos)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Artista[]> GetAllEventosByNomeAsync(string tema, bool includeEventos)
+        Task<Artista[]> IArtistaPersist.GetAllArtistasByIdAsync(int artistaId, bool includeEventos)
         {
             throw new NotImplementedException();
         }

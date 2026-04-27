@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "5bpBxAXcIag=",
+  "dgSpecHash": "XLONeXtaDwE=",
   "success": true,
   "projectFilePath": "C:\\Users\\Luiz\\Documents\\Proeventos\\back\\src\\proeventos.api\\ProEventos.API.csproj",
   "expectedPackageFiles": [
@@ -100,6 +100,7 @@
     "C:\\Users\\Luiz\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Luiz\\.nuget\\packages\\x.pagedlist\\10.5.9\\x.pagedlist.10.5.9.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.18\\microsoft.netcore.app.ref.8.0.18.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.18\\microsoft.windowsdesktop.app.ref.8.0.18.nupkg.sha512",
     "C:\\Users\\Luiz\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.18\\microsoft.aspnetcore.app.ref.8.0.18.nupkg.sha512",
